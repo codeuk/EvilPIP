@@ -14,7 +14,7 @@ In '__main__.py' only {
     set 'REVSHELL' to False if you don't want the reverse shell
     set 'REVSHELL' to True if you want the reverse shell
 }
-In '__main__.py' and 'server.py' {
+In '__main__.py' and 'server/server.py' {
     Set 'serverip' to your host/VPS IP for the victim to connect to
     Set 'port' to the port you want the victim to connect to (optional)
     Set 'buffer' to the buffer size (in bytes) that you want to send (optional)
@@ -28,7 +28,7 @@ If **REVSHELL** is enabled and you want the victim to connect to the reverse she
 
 # Distribution methods 💾
 
-**If you set REVSHELL to True: Open 'server.py' on your own machine/VPS to wait for a reverse shell connection**
+**If you set REVSHELL to True: Open 'server/server/server.py' on your own machine/VPS to wait for a reverse shell connection**
 
 **Method 1: Sending file directly (only works if they have the dependencies)**
 - Rename and encrypt (optional) the '__ main __.py' file
