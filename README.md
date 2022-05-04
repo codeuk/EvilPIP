@@ -1,7 +1,7 @@
 # EvilPIP 👿
 **EvilPIP is a Malicious PyPi Module/Malware with Discord Information Logger and Socket Reverse Shell**
 
-**What is Does:**
+**What this does:**
 - Takes advantage of the fact that python has administrative privileges, therefore so do PyPi packages
 - When executed, will gather system and discord information from the machine.
 - If the reverse shell option is enabled, the program will make the machine connect to your reverse shell
